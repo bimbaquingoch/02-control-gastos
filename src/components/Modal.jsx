@@ -24,6 +24,7 @@ const Modal = ({ setmodal, animarModal, setAnimarModal, guardarGasto }) => {
          return;
       }
       guardarGasto({ nombre, cantidad, categoria });
+      toast.success(`${nombre}: Añadido correctamente`);
    };
 
    return (

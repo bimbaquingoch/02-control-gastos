@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 import IconoNuevoGasto from "./img/nuevo-gasto.svg";
 import Modal from "./components/Modal";
+import { generarID } from "./helpers";
+import "react-toastify/dist/ReactToastify.min.css";
+import ListadoGastos from "./components/ListadoGastos";
 
 function App() {
    const [presupuesto, setPresupuesto] = useState(0);
@@ -21,11 +23,17 @@ function App() {
    };
 
    const guardarGasto = (gasto) => {
+      gasto.id = generarID();
+      gasto.fecha = Date.now();
       setGastos([...gastos, gasto]);
+      setAnimarModal(false);
+      setTimeout(() => {
+         setmodal(false);
+      }, 300);
    };
 
    return (
-      <>
+      <div className={modal ? "fijar" : ""}>
          <ToastContainer draggablePercent={60} draggableDirection='y' />
          <Header
             presupuesto={presupuesto}
@@ -35,13 +43,18 @@ function App() {
          />
 
          {isValidPresupuesto && (
-            <div className='nuevo-gasto'>
-               <img
-                  src={IconoNuevoGasto}
-                  alt='Icono nuevo gasto'
-                  onClick={handleNuevoGasto}
-               />
-            </div>
+            <>
+               <main>
+                  <ListadoGastos gastos={gastos} />
+               </main>
+               <div className='nuevo-gasto'>
+                  <img
+                     src={IconoNuevoGasto}
+                     alt='Icono nuevo gasto'
+                     onClick={handleNuevoGasto}
+                  />
+               </div>
+            </>
          )}
 
          {modal && (
@@ -52,7 +65,7 @@ function App() {
                guardarGasto={guardarGasto}
             />
          )}
-      </>
+      </div>
    );
 }
 
