@@ -11,7 +11,7 @@ const NuevoPresupuesto = ({
 
       if (!presupuesto || presupuesto < 0) {
          toast.error("no es un presupuesto valido");
-         setPresupuesto("");
+         setPresupuesto(0);
          return;
       }
       setIsValidPresupuesto(true);
