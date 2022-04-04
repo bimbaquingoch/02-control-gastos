@@ -1,12 +1,30 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import CerrarBtn from "../img/cerrar.svg";
 
-const Modal = ({ setmodal, animarModal, setAnimarModal, guardarGasto }) => {
+const Modal = ({
+   setmodal,
+   animarModal,
+   setAnimarModal,
+   guardarGasto,
+   gastoEditar,
+}) => {
    const [nombre, setNombre] = useState("");
    const [cantidad, setCantidad] = useState("");
    const [categoria, setCategoria] = useState("");
+   const [fecha, setFecha] = useState("");
+   const [id, setId] = useState("");
+
+   useEffect(() => {
+      if (Object.keys(gastoEditar).length > 0) {
+         setNombre(gastoEditar.nombre);
+         setCantidad(gastoEditar.cantidad);
+         setCategoria(gastoEditar.categoria);
+         setId(gastoEditar.id);
+         setFecha(gastoEditar.fecha);
+      }
+   }, []);
 
    const ocultarModal = () => {
       setAnimarModal(false);
@@ -23,8 +41,7 @@ const Modal = ({ setmodal, animarModal, setAnimarModal, guardarGasto }) => {
          });
          return;
       }
-      guardarGasto({ nombre, cantidad, categoria });
-      toast.success(`${nombre}: Añadido correctamente`);
+      guardarGasto({ nombre, cantidad, categoria, id, fecha });
    };
 
    return (
@@ -36,7 +53,9 @@ const Modal = ({ setmodal, animarModal, setAnimarModal, guardarGasto }) => {
             action=''
             className={`formulario ${animarModal ? "animar" : "cerrar"}`}
             onSubmit={handleSubmit}>
-            <legend>Nuevo Gasto</legend>
+            <legend>
+               {gastoEditar.nombre ? "Editar Gasto" : "Nuevo gasto"}
+            </legend>
             <div className='campo'>
                <label htmlFor='nombre'>Nombre Gasto</label>
                <input
@@ -77,7 +96,12 @@ const Modal = ({ setmodal, animarModal, setAnimarModal, guardarGasto }) => {
                </select>
             </div>
 
-            <input type='submit' value='Añadir gasto' name='' id='' />
+            <input
+               type='submit'
+               value={gastoEditar.nombre ? "Guardar Cambios" : "Añadir gasto"}
+               name=''
+               id=''
+            />
          </form>
       </div>
    );

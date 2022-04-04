@@ -352,11 +352,6 @@ main {
    bottom: 0;
 }
 
-.modal form input[type="submit"] {
-   margin-left: 50px;
-   margin-right: 60px;
-}
-
 @media screen and (min-width: 768px) {
    .modal form {
       border: 1px solid white;
