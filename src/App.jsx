@@ -8,9 +8,15 @@ import "react-toastify/dist/ReactToastify.min.css";
 import ListadoGastos from "./components/ListadoGastos";
 
 function App() {
-   const [gastos, setGastos] = useState([]);
+   const [gastos, setGastos] = useState(
+      localStorage.getItem("gastos")
+         ? JSON.parse(localStorage.getItem("gastos"))
+         : []
+   );
 
-   const [presupuesto, setPresupuesto] = useState(0);
+   const [presupuesto, setPresupuesto] = useState(
+      Number(localStorage.getItem("presupuesto")) ?? 0
+   );
    const [isValidPresupuesto, setIsValidPresupuesto] = useState(false);
 
    const [modal, setmodal] = useState(false);
@@ -27,6 +33,24 @@ function App() {
          }, 300);
       }
    }, [gastoEditar]);
+
+   // guardar presupuesto en localStorage
+   useEffect(() => {
+      localStorage.setItem("presupuesto", presupuesto ?? 0);
+   }, [presupuesto]);
+
+   useEffect(() => {
+      const presupuestoLS = Number(localStorage.getItem("presupuesto")) ?? 0;
+
+      if (presupuestoLS > 0) {
+         setIsValidPresupuesto(true);
+      }
+   }, []);
+
+   // guardar gastos en localStorage
+   useEffect(() => {
+      localStorage.setItem("gastos", JSON.stringify(gastos) ?? []);
+   }, [gastos]);
 
    const handleNuevoGasto = () => {
       setmodal(true);
