@@ -16,8 +16,8 @@ const Header = ({
             <h1>Planificador de gastos</h1>
             {isValidPresupuesto ? (
                <ControlPresupuesto
-                  setGastos={setGastos}
                   gastos={gastos}
+                  setGastos={setGastos}
                   presupuesto={presupuesto}
                   setPresupuesto={setPresupuesto}
                   setIsValidPresupuesto={setIsValidPresupuesto}
@@ -34,6 +34,13 @@ const Header = ({
    );
 };
 
-Header.propTypes = {};
+Header.propTypes = {
+   presupuesto: PropTypes.number.isRequired,
+   setPresupuesto: PropTypes.func.isRequired,
+   isValidPresupuesto: PropTypes.bool.isRequired,
+   setIsValidPresupuesto: PropTypes.func.isRequired,
+   gastos: PropTypes.array.isRequired,
+   setGastos: PropTypes.func.isRequired,
+};
 
 export default Header;
