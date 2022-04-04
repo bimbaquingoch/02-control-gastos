@@ -4,10 +4,28 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { formatearCantidad } from "../helpers";
 import "react-circular-progressbar/dist/styles.css";
 
-const ControlPresupuesto = ({ gastos, presupuesto }) => {
+const ControlPresupuesto = ({
+   gastos,
+   presupuesto,
+   setPresupuesto,
+   setGastos,
+   setIsValidPresupuesto,
+}) => {
    const [disponible, setDisponible] = useState(0);
    const [gastado, setGastado] = useState(0);
    const [porcentaje, setPorcentaje] = useState(0);
+
+   const handleResetApp = () => {
+      const resultado = confirm(
+         "Deseas reiniciar tu presupuesto y los gastos?"
+      );
+
+      if (resultado) {
+         setGastos([]);
+         setPresupuesto(0);
+         setIsValidPresupuesto(false);
+      }
+   };
 
    useEffect(() => {
       const totalGastado = gastos.reduce(
@@ -35,19 +53,25 @@ const ControlPresupuesto = ({ gastos, presupuesto }) => {
          <div>
             <CircularProgressbar
                styles={buildStyles({
-                  pathColor: "#3b82f6",
+                  pathColor: porcentaje > 100 ? "#dc2626" : "#3b82f6",
                   trailColor: "#f5f5ff",
-                  textColor: "#3b82f6",
+                  textColor: porcentaje > 100 ? "#dc2626" : "#3b82f6",
                })}
                value={porcentaje}
                text={`${porcentaje}% Gastado`}
             />
          </div>
          <div className='contenido-presupuesto'>
+            <button
+               className='reset-app'
+               type='button'
+               onClick={handleResetApp}>
+               Resetear APP
+            </button>
             <p>
                <span>Presupuesto: </span> {formatearCantidad(presupuesto)}
             </p>
-            <p>
+            <p className={`${disponible < 0 ? "negativo" : ""}`}>
                <span>Disponible: </span> {formatearCantidad(disponible)}
             </p>
             <p>

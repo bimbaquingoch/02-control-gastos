@@ -6,6 +6,7 @@ import Modal from "./components/Modal";
 import { generarID } from "./helpers";
 import "react-toastify/dist/ReactToastify.min.css";
 import ListadoGastos from "./components/ListadoGastos";
+import Filtros from "./components/Filtros";
 
 function App() {
    const [gastos, setGastos] = useState(
@@ -24,6 +25,9 @@ function App() {
 
    const [gastoEditar, setGastoEditar] = useState({});
 
+   const [filtro, setFiltro] = useState("");
+   const [gastosFiltrados, setGastosFiltrados] = useState([]);
+
    useEffect(() => {
       if (Object.keys(gastoEditar).length > 0) {
          setmodal(true);
@@ -33,6 +37,17 @@ function App() {
          }, 300);
       }
    }, [gastoEditar]);
+
+   useEffect(() => {
+      if (filtro) {
+         // filtrar gastos x categoria
+         const gastoFiltrado = gastos.filter(
+            (gasto) => gasto.categoria === filtro
+         );
+
+         setGastosFiltrados(gastoFiltrado);
+      }
+   }, [filtro]);
 
    // guardar presupuesto en localStorage
    useEffect(() => {
@@ -73,7 +88,7 @@ function App() {
       } else {
          gasto.id = generarID();
          gasto.fecha = Date.now();
-         setGastos([...gastos, gasto]);
+         setGastos([gasto, ...gastos]);
          toast.success(`Se ha añadido un nuevo gasto`);
       }
       setAnimarModal(false);
@@ -93,6 +108,7 @@ function App() {
          <ToastContainer draggablePercent={60} draggableDirection='y' />
          <Header
             gastos={gastos}
+            setGastos={setGastos}
             presupuesto={presupuesto}
             setPresupuesto={setPresupuesto}
             isValidPresupuesto={isValidPresupuesto}
@@ -102,10 +118,13 @@ function App() {
          {isValidPresupuesto && (
             <>
                <main>
+                  <Filtros filtro={filtro} setFiltro={setFiltro} />
                   <ListadoGastos
                      gastos={gastos}
                      setGastoEditar={setGastoEditar}
                      eliminarGasto={eliminarGasto}
+                     filtro={filtro}
+                     gastosFiltrados={gastosFiltrados}
                   />
                </main>
                <div className='nuevo-gasto'>
